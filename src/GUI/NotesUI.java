@@ -6,9 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 public class NotesUI implements ActionListener
 {
+    String filename ="/ICONS/appIcon.png";
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     Dimension dimension = toolkit.getScreenSize();
     int width = (int) dimension.getWidth();
@@ -22,6 +24,9 @@ public class NotesUI implements ActionListener
         frame.setSize(width/2,height/2);
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
+        ImageIcon rawIcon =  new ImageIcon(Objects.requireNonNull(getClass().getResource(filename)));
+        Image scaledImage = rawIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        frame.setIconImage(scaledImage);
         barMenu();
         initialiseTextArea(total);
         frame.setVisible(true);
