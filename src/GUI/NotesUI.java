@@ -1,5 +1,7 @@
 package GUI;
 
+import API.TextRelated;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +12,8 @@ import java.util.Objects;
 
 public class NotesUI implements ActionListener
 {
+    TextRelated T = new TextRelated();
+
     String filename ="/ICONS/appIcon.png";
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     Dimension dimension = toolkit.getScreenSize();
@@ -28,13 +32,14 @@ public class NotesUI implements ActionListener
         Image scaledImage = rawIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         frame.setIconImage(scaledImage);
         barMenu();
-        initialiseTextArea(total);
+        initialiseTextArea(total,null);
         frame.setVisible(true);
     }
 
-    public void initialiseTextArea(int total)
+    JTextArea[] textAreas;
+    public void initialiseTextArea(int total, String[] texts)
     {
-        JTextArea[] textAreas = new JTextArea[total];
+        textAreas = new JTextArea[total];
         frame.setLayout(new GridLayout(total,1,0,20));
         for (int i = 0; i < total; i++)
         {
@@ -42,6 +47,10 @@ public class NotesUI implements ActionListener
             textArea.setFont(new Font("Arial",Font.PLAIN, 20));
             textArea.setTabSize(4);
             textArea.setMargin(new Insets(10,10,10,10));
+            if(texts!=null && texts.length>i)
+            {
+                textArea.setText(texts[i]);
+            }
 
 
             textArea.addMouseListener(new MouseAdapter() {
@@ -152,8 +161,9 @@ public class NotesUI implements ActionListener
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                String[] texts = T.getTextFromTextAreas(textAreas);
                 frame.getContentPane().removeAll();
-                initialiseTextArea(comboBox.getSelectedIndex() + 1);
+                initialiseTextArea(comboBox.getSelectedIndex() + 1 , texts);
                 frame.revalidate();
                 frame.repaint();
                 dialog.dispose();
