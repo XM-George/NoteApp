@@ -2,10 +2,12 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class NotesUI
+public class NotesUI implements ActionListener
 {
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     Dimension dimension = toolkit.getScreenSize();
@@ -13,14 +15,15 @@ public class NotesUI
     int height = (int) dimension.getHeight();
 
     JFrame frame;
-    public void start()
+    public void start(int total)
     {
         frame=new JFrame("Note App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(width/2,height/2);
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
-        initialiseTextArea(3);
+        barMenu();
+        initialiseTextArea(total);
         frame.setVisible(true);
     }
 
@@ -78,13 +81,115 @@ public class NotesUI
                 }
             });
 
-
-
-
-
             textAreas[i] = textArea;
             frame.add(new JScrollPane(textArea));
         }
+    }
+
+    public void barMenu()
+    {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu editTextMenu = new JMenu("Edit Text");
+
+        JMenu saveMenu = new JMenu("Save");
+        JMenuItem saveAs = new JMenuItem("Save As");
+        saveAs.addActionListener(this);
+        JMenuItem save = new JMenuItem("Save");
+        save.addActionListener(this);
+        saveMenu.add(saveAs);
+        saveMenu.add(save);
+
+        JMenu printMenu = new JMenu("Print");
+        JMenuItem printAll = new JMenuItem("Print");
+        printAll.addActionListener(this);
+        printMenu.add(printAll);
+
+        JMenu pageCountMenu = new JMenu("Pages");
+        JMenuItem pageCount = new JMenuItem("Change Page Count");
+        pageCount.addActionListener(this);
+        pageCountMenu.add(pageCount);
+
+        menuBar.add(editTextMenu);
+        menuBar.add(saveMenu);
+        menuBar.add(printMenu);
+        menuBar.add(pageCountMenu);
+
+        frame.setJMenuBar(menuBar);
+        menuBar.setVisible(true);
+        frame.setVisible(true);
+    }
+
+
+    public void getPageCount()
+    {
+        JDialog dialog=new JDialog();
+        dialog.setTitle("Page Count");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setModal(true);
+        dialog.getContentPane().setPreferredSize(new Dimension(400,300));
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.setResizable(false);
+        dialog.setLayout(null);
+
+        JComboBox<Integer> comboBox = new JComboBox<>();
+        comboBox.setBounds(100,40,200,40);
+        comboBox.addItem(1);
+        comboBox.addItem(2);
+        comboBox.addItem(3);
+        comboBox.addItem(4);
+        comboBox.addItem(5);
+
+        JButton confirmButton = new JButton("Change Page Count");
+        confirmButton.setFocusable(false);
+        confirmButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                frame.dispose();
+                start(comboBox.getSelectedIndex() + 1);
+                dialog.dispose();
+            }
+        });
+        confirmButton.setFont(new Font("Arial",Font.BOLD,15));
+        confirmButton.setBounds(20,200,180,50);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFocusable(false);
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                dialog.dispose();
+            }
+        });
+        cancelButton.setFont(new Font("Arial",Font.BOLD,15));
+        cancelButton.setBounds(220,200,160,50);
+
+        dialog.add(confirmButton);
+        dialog.add(cancelButton);
+        dialog.add(comboBox);
+        dialog.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        switch (e.getActionCommand())
+        {
+            case "Save As":
+            break;
+            case "Save":
+            break;
+            case "Print":
+            break;
+            case "Change Page Count":
+            getPageCount();
+            break;
+        }
+
     }
 
 }

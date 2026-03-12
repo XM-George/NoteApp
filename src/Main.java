@@ -5,6 +5,7 @@ public class Main
     public  static void main(String[] args)
     {
         NotesUI notesUI = new NotesUI();
-        notesUI.start();
+        notesUI.start(3);
+        //notesUI.barMenu();
     }
 }
