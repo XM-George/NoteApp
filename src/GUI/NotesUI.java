@@ -122,7 +122,6 @@ public class NotesUI implements ActionListener
 
         frame.setJMenuBar(menuBar);
         menuBar.setVisible(true);
-        frame.setVisible(true);
     }
 
 
@@ -153,8 +152,10 @@ public class NotesUI implements ActionListener
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                frame.dispose();
-                start(comboBox.getSelectedIndex() + 1);
+                frame.getContentPane().removeAll();
+                initialiseTextArea(comboBox.getSelectedIndex() + 1);
+                frame.revalidate();
+                frame.repaint();
                 dialog.dispose();
             }
         });
