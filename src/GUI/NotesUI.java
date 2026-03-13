@@ -1,5 +1,6 @@
 package GUI;
 
+import FILES.Saving;
 import API.TextRelated;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.util.Objects;
 public class NotesUI implements ActionListener
 {
     TextRelated T = new TextRelated();
+    Saving S = new Saving();
 
     String filename ="/ICONS/appIcon.png";
     Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -196,6 +198,7 @@ public class NotesUI implements ActionListener
         switch (e.getActionCommand())
         {
             case "Save As":
+            S.saveAs(textAreas);
             break;
             case "Save":
             break;
