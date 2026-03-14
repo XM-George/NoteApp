@@ -1,5 +1,6 @@
 package GUI;
 
+import FILES.Loading;
 import FILES.Saving;
 import API.TextRelated;
 
@@ -15,6 +16,7 @@ public class NotesUI implements ActionListener
 {
     TextRelated T = new TextRelated();
     Saving S = new Saving();
+    Loading L = new Loading();
 
     String mainAppIconPath ="/ICONS/appIcon.png";
     String filename = "New";
@@ -107,6 +109,11 @@ public class NotesUI implements ActionListener
     {
         JMenuBar menuBar = new JMenuBar();
 
+        JMenu printMenu = new JMenu("Print");
+        JMenuItem printAll = new JMenuItem("Print");
+        printAll.addActionListener(this);
+        printMenu.add(printAll);
+
         JMenu editTextMenu = new JMenu("Edit Text");
 
         JMenu saveMenu = new JMenu("Save");
@@ -117,19 +124,20 @@ public class NotesUI implements ActionListener
         saveMenu.add(saveAs);
         saveMenu.add(save);
 
-        JMenu printMenu = new JMenu("Print");
-        JMenuItem printAll = new JMenuItem("Print");
-        printAll.addActionListener(this);
-        printMenu.add(printAll);
+        JMenu openFileMenu = new JMenu("Open");
+        JMenuItem openFile = new JMenuItem("Open File");
+        openFile.addActionListener(this);
+        openFileMenu.add(openFile);
 
         JMenu pageCountMenu = new JMenu("Pages");
         JMenuItem pageCount = new JMenuItem("Change Page Count");
         pageCount.addActionListener(this);
         pageCountMenu.add(pageCount);
 
+        menuBar.add(printMenu);
         menuBar.add(editTextMenu);
         menuBar.add(saveMenu);
-        menuBar.add(printMenu);
+        menuBar.add(openFileMenu);
         menuBar.add(pageCountMenu);
 
         frame.setJMenuBar(menuBar);
@@ -165,10 +173,7 @@ public class NotesUI implements ActionListener
             public void actionPerformed(ActionEvent e)
             {
                 String[] texts = T.getTextFromTextAreas(textAreas);
-                frame.getContentPane().removeAll();
-                initialiseTextArea(comboBox.getSelectedIndex() + 1 , texts);
-                frame.revalidate();
-                frame.repaint();
+                reinitTextAreas(comboBox.getSelectedIndex() + 1 , texts);
                 dialog.dispose();
             }
         });
@@ -193,11 +198,21 @@ public class NotesUI implements ActionListener
         dialog.setVisible(true);
     }
 
+    public void reinitTextAreas(int pageCount, String[] texts)
+    {
+        frame.getContentPane().removeAll();
+        initialiseTextArea(pageCount , texts);
+        frame.revalidate();
+        frame.repaint();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
         switch (e.getActionCommand())
         {
+            case "Print":
+            break;
             case "Save As":
             filename = S.saveAs(textAreas);
             frame.setTitle(filename);
@@ -213,7 +228,13 @@ public class NotesUI implements ActionListener
                 S.save(textAreas);
             }
             break;
-            case "Print":
+            case "Open File":
+            Loading.ReturnValues result = L.openFile();
+            if(result.getFilename() != null)
+            {
+                reinitTextAreas(result.getNumberOfTextAreas(), result.getTexts());
+                frame.setTitle(result.getFilename());
+            }
             break;
             case "Change Page Count":
             getPageCount();
