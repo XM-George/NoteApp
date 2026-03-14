@@ -205,7 +205,7 @@ public class NotesUI implements ActionListener
             case "Save":
             if(filename.equals("New"))
             {
-                S.saveAs(textAreas);
+                filename = S.saveAs(textAreas);
                 frame.setTitle(filename);
             }
             else
