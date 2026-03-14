@@ -16,7 +16,8 @@ public class NotesUI implements ActionListener
     TextRelated T = new TextRelated();
     Saving S = new Saving();
 
-    String filename ="/ICONS/appIcon.png";
+    String mainAppIconPath ="/ICONS/appIcon.png";
+    String filename = "New";
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     Dimension dimension = toolkit.getScreenSize();
     int width = (int) dimension.getWidth();
@@ -25,12 +26,12 @@ public class NotesUI implements ActionListener
     JFrame frame;
     public void start(int total)
     {
-        frame=new JFrame("Note App");
+        frame=new JFrame(filename);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(width/2,height/2);
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
-        ImageIcon rawIcon =  new ImageIcon(Objects.requireNonNull(getClass().getResource(filename)));
+        ImageIcon rawIcon =  new ImageIcon(Objects.requireNonNull(getClass().getResource(mainAppIconPath)));
         Image scaledImage = rawIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         frame.setIconImage(scaledImage);
         barMenu();
@@ -198,9 +199,19 @@ public class NotesUI implements ActionListener
         switch (e.getActionCommand())
         {
             case "Save As":
-            S.saveAs(textAreas);
+            filename = S.saveAs(textAreas);
+            frame.setTitle(filename);
             break;
             case "Save":
+            if(filename.equals("New"))
+            {
+                S.saveAs(textAreas);
+                frame.setTitle(filename);
+            }
+            else
+            {
+                S.save(textAreas);
+            }
             break;
             case "Print":
             break;

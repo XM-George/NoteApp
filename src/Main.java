@@ -6,6 +6,5 @@ public class Main
     {
         NotesUI notesUI = new NotesUI();
         notesUI.start(3);
-        //notesUI.barMenu();
     }
 }
