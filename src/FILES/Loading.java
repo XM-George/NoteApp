@@ -11,20 +11,15 @@ public class Loading
 {
     public static class ReturnValues
     {
-        private String filename = null;
-        private int numberOfTextAreas = 0;
-        private String [] texts = null;
+        private String filename;
+        private int numberOfTextAreas;
+        private String [] texts;
 
         public ReturnValues(String filename, int numberOfTextAreas, String [] texts)
         {
             this.filename = filename;
             this.numberOfTextAreas = numberOfTextAreas;
             this.texts = texts;
-        }
-
-        public ReturnValues()
-        {
-
         }
 
         public String getFilename()
