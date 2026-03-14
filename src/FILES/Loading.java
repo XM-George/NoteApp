@@ -11,11 +11,11 @@ public class Loading
 {
     public static class ReturnValues
     {
-        private String filename;
-        private int numberOfTextAreas;
-        private String [] texts;
+        private final String filename;
+        private final int numberOfTextAreas;
+        private final String[] texts;
 
-        public ReturnValues(String filename, int numberOfTextAreas, String [] texts)
+        public ReturnValues(String filename, int numberOfTextAreas, String[] texts)
         {
             this.filename = filename;
             this.numberOfTextAreas = numberOfTextAreas;
@@ -38,6 +38,7 @@ public class Loading
         }
     }
 
+    private static final String PAGE_SEPERATOR = "===PAGE BREAK===";
     public ReturnValues openFile()
     {
         FileDialog fd = new FileDialog((Frame) null, "Open File", FileDialog.LOAD);
@@ -74,7 +75,7 @@ public class Loading
                         StringBuilder builder = new StringBuilder();
 
                         String nextLine;
-                        while( (nextLine = br.readLine()) != null && !("===PAGE BREAK===").equals(nextLine) )
+                        while( (nextLine = br.readLine()) != null && !(PAGE_SEPERATOR).equals(nextLine) )
                         {
                             builder.append(nextLine).append("\n");
                         }
