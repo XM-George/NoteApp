@@ -1,5 +1,6 @@
 package GUI;
 
+import API.Print;
 import FILES.Loading;
 import FILES.Saving;
 import API.TextRelated;
@@ -15,6 +16,7 @@ public class NotesUI implements ActionListener
     TextRelated T = new TextRelated();
     Saving S = new Saving();
     Loading L = new Loading();
+    Print P = new Print();
 
     String mainAppIconPath ="/ICONS/appIcon.png";
     String filename = "New";
@@ -43,7 +45,7 @@ public class NotesUI implements ActionListener
     public void initialiseTextArea(int total, String[] texts)
     {
         textAreas = new JTextArea[total];
-        frame.setLayout(new GridLayout(total,1,0,20));
+        frame.setLayout(new GridLayout(total,1,0,0));
         for (int i = 0; i < total; i++)
         {
             JTextArea textArea = new JTextArea();
@@ -169,6 +171,7 @@ public class NotesUI implements ActionListener
         switch (e.getActionCommand())
         {
             case "Print":
+            P.PrintFrame((JPanel) frame.getContentPane());
             break;
             case "Save As":
             filename = S.saveAs(textAreas);
