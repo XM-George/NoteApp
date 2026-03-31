@@ -45,7 +45,7 @@ public class NotesUI implements ActionListener
     public void initialiseTextArea(int total, String[] texts)
     {
         textAreas = new JTextArea[total];
-        frame.setLayout(new GridLayout(total,1,0,0));
+        frame.setLayout(new GridLayout(total,1,0,3));
         for (int i = 0; i < total; i++)
         {
             JTextArea textArea = new JTextArea();
@@ -60,7 +60,7 @@ public class NotesUI implements ActionListener
             textArea = T.mouseClickOnTextAreas(textArea);
 
             textAreas[i] = textArea;
-            frame.add(new JScrollPane(textArea));
+            frame.add(textArea);
         }
     }
 
