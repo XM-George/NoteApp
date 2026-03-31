@@ -49,7 +49,7 @@ public class NotesUI implements ActionListener
         for (int i = 0; i < total; i++)
         {
             JTextArea textArea = new JTextArea();
-            textArea.setFont(new Font("Arial",Font.PLAIN, 20));
+            textArea.setFont(new Font("Arial",Font.PLAIN, 18));
             textArea.setTabSize(4);
             textArea.setMargin(new Insets(10,10,10,10));
             if(texts!=null && texts.length>i)
