@@ -2,48 +2,49 @@ package API;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
+import java.awt.print.*;
 
 public class Print {
-    public void PrintFrame(JPanel notesPanel)
-    {
+
+    public void PrintFrame(JPanel notesPanel) {
+
         PrinterJob job = PrinterJob.getPrinterJob();
 
         PageFormat pf = job.defaultPage();
-        pf.setOrientation(PageFormat.LANDSCAPE); // or PORTRAIT
+        pf.setOrientation(PageFormat.PORTRAIT); // change if you want LANDSCAPE
+
+        // 🔥 VERY IMPORTANT: ensure correct size before printing
+        notesPanel.setSize(notesPanel.getPreferredSize());
 
         job.setPrintable(new Printable() {
+
             @Override
-            public int print(Graphics g, PageFormat pf, int pageIndex) throws PrinterException {
-                if (pageIndex > 0)
-                {
-                    return Printable.NO_SUCH_PAGE;
-                }
+            public int print(Graphics g, PageFormat pageFormat, int pageIndex) throws PrinterException {
 
                 Graphics2D g2d = (Graphics2D) g;
 
-                g2d.translate(pf.getImageableX(), pf.getImageableY());
+                double pageHeight = pageFormat.getImageableHeight();
+                double panelHeight = notesPanel.getHeight();
 
-                // scale to fit the page
-                double scaleX = pf.getImageableWidth() / notesPanel.getWidth();
-                double scaleY = pf.getImageableHeight() / notesPanel.getHeight();
-                System.out.println("ImageableWidth:" + pf.getImageableWidth());
-                System.out.println("ImageableHeight:" + pf.getImageableHeight());
-                System.out.println("notePanelWidth:" + notesPanel.getWidth());
-                System.out.println("notePanel Height:" + notesPanel.getHeight());
-                pf.setOrientation(PageFormat.LANDSCAPE);
-                double scale = Math.min(scaleX, scaleY);
-                //g2d.scale(scale, scale);
+                // calculate total pages
+                int totalPages = (int) Math.ceil(panelHeight / pageHeight);
 
-                // print the panel as it appears on screen
+                if (pageIndex >= totalPages) {
+                    return NO_SUCH_PAGE;
+                }
+
+                // move to printable area
+                g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+
+                // move view for current page
+                g2d.translate(0, -pageIndex * pageHeight);
+
+                // print panel
                 notesPanel.printAll(g2d);
 
-                return Printable.PAGE_EXISTS;
+                return PAGE_EXISTS;
             }
-        });
+        }, pf);
 
         if (job.printDialog()) {
             try {

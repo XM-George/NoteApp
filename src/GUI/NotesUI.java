@@ -45,13 +45,52 @@ public class NotesUI implements ActionListener
     public void initialiseTextArea(int total, String[] texts)
     {
         textAreas = new JTextArea[total];
-        frame.setLayout(new GridLayout(total,1,0,3));
+        frame.setLayout(new GridBagLayout());
+
+        int widthInset = 220;
+        int heightInset = 220;
+        int pageWidth = 595 + widthInset;
+        int pageHeight = 842 + heightInset;
+
+        JPanel pagePanel = new JPanel();
+        pagePanel.setMinimumSize(new Dimension(pageWidth, pageHeight));
+        pagePanel.setPreferredSize(new Dimension(pageWidth,pageHeight));
+        pagePanel.setMaximumSize(new Dimension(pageWidth,pageHeight));
+        pagePanel.setLayout(new GridLayout(0,1,10,10));
+
         for (int i = 0; i < total; i++)
         {
             JTextArea textArea = new JTextArea();
             textArea.setFont(new Font("Arial",Font.PLAIN, 18));
             textArea.setTabSize(4);
-            textArea.setMargin(new Insets(10,10,10,10));
+
+            textArea.setMargin(new Insets(10,widthInset/2,10,widthInset/2));
+            if(total == 1)
+            {
+                textArea.setMargin(new Insets(heightInset/2,widthInset/2,heightInset/2,widthInset/2));
+            }
+            else
+            {
+                if (i == 0)
+                {
+                    textArea.setMargin(new Insets(heightInset/2,widthInset/2,10,widthInset/2));
+                }
+                else
+                {
+                    if(i == total-1)
+                    {
+                        textArea.setMargin(new Insets(10,widthInset/2,heightInset/2,widthInset/2));
+                    }
+                }
+            }
+
+
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+
+            textArea.setMaximumSize(new Dimension(pageWidth, (pageHeight/total)));
+            textArea.setPreferredSize(new Dimension(pageWidth, 150));
+
             if(texts!=null && texts.length>i)
             {
                 textArea.setText(texts[i]);
@@ -60,8 +99,11 @@ public class NotesUI implements ActionListener
             textArea = T.mouseClickOnTextAreas(textArea);
 
             textAreas[i] = textArea;
-            frame.add(textArea);
+
+            pagePanel.add(textArea);
         }
+
+        frame.add(pagePanel);
     }
 
     public void barMenu()
