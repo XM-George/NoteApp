@@ -30,7 +30,7 @@ public class NotesUI implements ActionListener
     {
         frame=new JFrame(filename);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width/2,height/2);
+        frame.setSize(2*width/3,2*height/3);
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
         ImageIcon rawIcon =  new ImageIcon(Objects.requireNonNull(getClass().getResource(mainAppIconPath)));
@@ -48,7 +48,7 @@ public class NotesUI implements ActionListener
         frame.setLayout(new GridBagLayout());
 
         int widthInset = 220;
-        int heightInset = 220;
+        int heightInset = 0;
         int pageWidth = 595 + widthInset;
         int pageHeight = 842 + heightInset;
 
@@ -56,7 +56,7 @@ public class NotesUI implements ActionListener
         pagePanel.setMinimumSize(new Dimension(pageWidth, pageHeight));
         pagePanel.setPreferredSize(new Dimension(pageWidth,pageHeight));
         pagePanel.setMaximumSize(new Dimension(pageWidth,pageHeight));
-        pagePanel.setLayout(new GridLayout(0,1,10,10));
+        pagePanel.setLayout(new GridLayout(0,1,5,5));
 
         for (int i = 0; i < total; i++)
         {
@@ -65,31 +65,10 @@ public class NotesUI implements ActionListener
             textArea.setTabSize(4);
 
             textArea.setMargin(new Insets(10,widthInset/2,10,widthInset/2));
-            if(total == 1)
-            {
-                textArea.setMargin(new Insets(heightInset/2,widthInset/2,heightInset/2,widthInset/2));
-            }
-            else
-            {
-                if (i == 0)
-                {
-                    textArea.setMargin(new Insets(heightInset/2,widthInset/2,10,widthInset/2));
-                }
-                else
-                {
-                    if(i == total-1)
-                    {
-                        textArea.setMargin(new Insets(10,widthInset/2,heightInset/2,widthInset/2));
-                    }
-                }
-            }
 
 
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
-
-            textArea.setMaximumSize(new Dimension(pageWidth, (pageHeight/total)));
-            textArea.setPreferredSize(new Dimension(pageWidth, 150));
 
             if(texts!=null && texts.length>i)
             {
@@ -100,7 +79,12 @@ public class NotesUI implements ActionListener
 
             textAreas[i] = textArea;
 
-            pagePanel.add(textArea);
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+            scrollPane.setPreferredSize(new Dimension(pageWidth, (pageHeight/total)));
+
+            pagePanel.add(scrollPane);
         }
 
         frame.add(pagePanel);
