@@ -55,11 +55,29 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension(900, 650));
         setLocationRelativeTo(null);
 
+        setImageIcon();
         initialiseUI();
         initialiseMenuBar();
         initialiseFindShortcut();
         initialiseDocumentChangeTracking();
         updateWindowTitle();
+    }
+
+    private void setImageIcon() {
+        java.net.URL iconUrl =
+                getClass().getResource("/icons/appIcon.png");
+
+        if (iconUrl == null) {
+            System.err.println(
+                    "Application icon not found: /icons/appIcon.png"
+            );
+            return;
+        }
+
+        Image iconImage =
+                Toolkit.getDefaultToolkit().getImage(iconUrl);
+
+        setIconImage(iconImage);
     }
 
     private void initialiseUI() {
