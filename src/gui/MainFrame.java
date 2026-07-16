@@ -619,17 +619,37 @@ public class MainFrame extends JFrame {
     private void showPrintPreview() {
         preparePageForRendering();
 
-        BufferedImage previewImage =
-                createPagePreviewImage();
+        List<JTextArea> textAreas = getAllTextAreas();
+        List<Boolean> previousCaretStates = new java.util.ArrayList<>();
 
-        PrintPreviewDialog previewDialog =
-                new PrintPreviewDialog(
-                        this,
-                        previewImage,
-                        this::printDocument
-                );
+        for (JTextArea textArea : textAreas) {
+            previousCaretStates.add(
+                    textArea.getCaret().isVisible()
+            );
 
-        previewDialog.setVisible(true);
+            textArea.getCaret().setVisible(false);
+        }
+
+        try {
+            BufferedImage previewImage =
+                    createPagePreviewImage();
+
+            PrintPreviewDialog previewDialog =
+                    new PrintPreviewDialog(
+                            this,
+                            previewImage,
+                            this::printDocument
+                    );
+
+            previewDialog.setVisible(true);
+
+        } finally {
+            for (int i = 0; i < textAreas.size(); i++) {
+                textAreas.get(i)
+                        .getCaret()
+                        .setVisible(previousCaretStates.get(i));
+            }
+        }
     }
 
     private BufferedImage createPagePreviewImage() {

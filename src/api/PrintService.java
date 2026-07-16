@@ -3,6 +3,10 @@ package api;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.print.*;
+import javax.swing.text.Caret;
+import javax.swing.text.JTextComponent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PrintService {
 
@@ -167,12 +171,79 @@ public class PrintService {
              * printAll αντί για paint, ώστε να τυπωθούν
              * σωστά όλα τα Swing child components.
              */
-            component.printAll(graphics2D);
+            List<TextComponentState> textComponentStates =
+                    hideCarets(component);
+
+            try {
+                component.printAll(graphics2D);
+            } finally {
+                restoreCarets(textComponentStates);
+            }
 
             return Printable.PAGE_EXISTS;
 
         } finally {
             graphics2D.dispose();
+        }
+    }
+
+    private static class TextComponentState {
+
+        private final JTextComponent component;
+        private final boolean caretVisible;
+        private final boolean selectionVisible;
+
+        private TextComponentState(JTextComponent component) {
+            this.component = component;
+            this.caretVisible = component.getCaret().isVisible();
+            this.selectionVisible =
+                    component.getCaret().isSelectionVisible();
+        }
+
+        private void restore() {
+            Caret caret = component.getCaret();
+
+            caret.setVisible(caretVisible);
+            caret.setSelectionVisible(selectionVisible);
+        }
+    }
+
+    private List<TextComponentState> hideCarets(
+            Component component
+    ) {
+        List<TextComponentState> states = new ArrayList<>();
+
+        hideCaretsRecursively(component, states);
+
+        return states;
+    }
+
+    private void hideCaretsRecursively(
+            Component component,
+            List<TextComponentState> states
+    ) {
+        if (component instanceof JTextComponent textComponent) {
+            TextComponentState state =
+                    new TextComponentState(textComponent);
+
+            states.add(state);
+
+            textComponent.getCaret().setVisible(false);
+            textComponent.getCaret().setSelectionVisible(false);
+        }
+
+        if (component instanceof Container container) {
+            for (Component child : container.getComponents()) {
+                hideCaretsRecursively(child, states);
+            }
+        }
+    }
+
+    private void restoreCarets(
+            List<TextComponentState> states
+    ) {
+        for (TextComponentState state : states) {
+            state.restore();
         }
     }
 }
